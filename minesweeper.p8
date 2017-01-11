@@ -1,14 +1,29 @@
 pico-8 cartridge // http://www.pico-8.com
 version 8
 __lua__
+
+
+
 frame = 0
 cross = {}
 cor = nil
 size = 5
 function board()
+      b = {}
+      
+      
+
+      function b:draw()
+            local i = 0
+            local j = 0
+            for i = 0, 127, size do
+                  for j = 0, 127, size do
+                        map(0,0,i,j)
+                  end
+            end
+      end
 	
 end
-
 
 function crosshair()
 	local cross = {}
@@ -42,6 +57,7 @@ end
 
 function _init()
 	cross = crosshair()
+      board()
 end
 
 
