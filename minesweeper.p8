@@ -2,9 +2,13 @@ pico-8 cartridge // http://www.pico-8.com
 version 8
 __lua__
 frame = 0
-sprite = 1
 cross = {}
 cor = nil
+size = 5
+function board()
+	
+end
+
 
 function crosshair()
 	local cross = {}
@@ -15,17 +19,17 @@ function crosshair()
 end
 
 function listen()
-	if (btn(0)) cross.x -=1
-	if (btn(1)) cross.x +=1
-	if (btn(2)) cross.y -=1
-	if (btn(3)) cross.y +=1
+	if (btnp(0)) cross.x -=size
+	if (btnp(1)) cross.x +=size
+	if (btnp(2)) cross.y -=size
+	if (btnp(3)) cross.y +=size
 	if (btnp(4) or btnp(5))	then 
 		cor = cocreate(explode)
 	end
 end
 
 function explode()
-	sprite = 1
+	local sprite = 1
 	x = cross.x
 	y = cross.y
 	while (sprite < 10) do
