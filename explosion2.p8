@@ -19,20 +19,21 @@ function listen()
 	if (btn(1)) cross.x +=1
 	if (btn(2)) cross.y -=1
 	if (btn(3)) cross.y +=1
-	if (btn(4) or btn(5))	then 
+	if (btnp(4) or btnp(5))	then 
 		cor = cocreate(explode)
 	end
 end
 
 function explode()
-	if (frame%3 == 1) sprite += 1 
-	if (sprite > 10) then 
-		sprite = 1
-	else
-		spr(sprite, 64, 64)
+	sprite = 1
+	x = cross.x
+	y = cross.y
+	while (sprite < 10) do
+		if (frame%3 == 1) sprite += 1 
+		spr(sprite, x, y)
+		yield()
 	end
-	
-	yield()	
+	return true
 end
 
 function _init()
