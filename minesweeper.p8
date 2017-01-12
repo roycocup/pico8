@@ -11,22 +11,47 @@ coroutines = {} -- coroutines for animations etc
 cursor_enabled = true
 
 function crosshair()
- local cross = {}
- cross.x = 64
- cross.y = 64
- cross.spr = 16
- return cross
+    local cross = {}
+    cross.x = 64
+    cross.y = 64
+    cross.spr = 16
+    return cross
+end
+
+function board()
+    board = {max_x = 64, max_y = 64}
+    local x = 0
+    local y = 0
+    for x=0,64,size do
+        for y=0,64,size do
+            add(board, {cells = {name=x.."-"..y, x=x, y=y}})
+        end
+    end
+    populateBombs(board)
+    --populateNumbers(board)
+    return board; 
+end
+
+function populateBombs(b)
+    local used = {}
+    local x = rnd(b.max_x)
+    --[[
+    for k,v in pairs(board) do
+        print (v.cells.y)
+        if (k > 3) return 
+    end
+    ]]--
 end
 
 function listen()
- if (btnp(0)) cross.x -=size
- if (btnp(1)) cross.x +=size
- if (btnp(2)) cross.y -=size
- if (btnp(3)) cross.y +=size
- if (btnp(4) or btnp(5)) then 
-  add(coroutines, cocreate(explode))
-  sfx(1) 
- end
+    if (btnp(0)) cross.x -=size
+    if (btnp(1)) cross.x +=size
+    if (btnp(2)) cross.y -=size
+    if (btnp(3)) cross.y +=size
+    if (btnp(4) or btnp(5)) then 
+        add(coroutines, cocreate(explode))
+        sfx(1) 
+    end
 end
 
 
@@ -90,6 +115,7 @@ end
  
 function _init()
  cross = crosshair() 
+ board = board()
 end
 
 function _update()
@@ -101,11 +127,14 @@ end
 
 function _draw()
  cls()
+ --[[
  showcursor() 
  applymarks()
  runcoroutines()
  print (stat(0))
  print (stat(1))
+ ]]--
+ 
 end
 __gfx__
 00000000000000000000000000aaaa000a00000000a2000002a02002029000000240000000000000000000000000000000000000000000000000000000000000
