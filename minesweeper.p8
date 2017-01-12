@@ -38,19 +38,24 @@ function explode()
         spr(sprite, x, y)
         yield()
     end
-    add(marks, {marked = false, x = x, y = y})
+    add(marks, {marked = false, routined = false, x = x, y = y})
     return true
 end
 
 function embers()
-    local s = 32
-    local x = cross.x
-    local y = cross.y
-    while (true) do
-        if (frame%3 == 1) s += 1 
-        spr(s, x, y)
-        if (s >= 38) s = 32
-        yield()
+    for m in all(marks) do
+        if (m.routined == false) then 
+            m.routined = true
+            local s = 32
+            local x = m.x
+            local y = m.y
+            while (true) do
+                if (frame%3 == 1) s += 1 
+                spr(s, x, y)
+                if (s >= 38) s = 32
+                yield()
+            end
+        end     
     end
 end
 
