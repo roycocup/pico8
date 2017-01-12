@@ -1,85 +1,93 @@
 pico-8 cartridge // http://www.pico-8.com
 version 8
 __lua__
+
 frame = 0
 cross = {}
 cor = nil
 size = 5
-marks = {}
-
-function board()
-	b = {}
- function b:draw()
-  local i = 0
-  local j = 0
-  for i = 0, 127, size do
-  	for j = 0, 127, size do
-  		map(0,0,i,j)
-   end
-  end
- end	
-end
+marks = {} -- markings on the floor where. places where we exploded stuff
+coroutines = {} -- coroutines for animations etc
 
 function crosshair()
-	local cross = {}
-	cross.x = 64
-	cross.y = 64
-	cross.spr = 16
-	return cross
+ local cross = {}
+ cross.x = 64
+ cross.y = 64
+ cross.spr = 16
+ return cross
 end
 
 function listen()
-	if (btnp(0)) cross.x -=size
-	if (btnp(1)) cross.x +=size
-	if (btnp(2)) cross.y -=size
-	if (btnp(3)) cross.y +=size
-	if (btnp(4) or btnp(5))	then 
-		cor = cocreate(explode)
-		sfx(1)
-		marks.add = {x = cross.x, y = cross.y}	
-	end
+ if (btnp(0)) cross.x -=size
+ if (btnp(1)) cross.x +=size
+ if (btnp(2)) cross.y -=size
+ if (btnp(3)) cross.y +=size
+ if (btnp(4) or btnp(5)) then 
+  add(coroutines, cocreate(explode))
+  sfx(1) 
+ end
 
 end
 
 function explode()
-	local sprite = 1
-	x = cross.x
-	y = cross.y
-	while (sprite < 10) do
-		if (frame%3 == 1) sprite += 1 
-		spr(sprite, x, y)
-		yield()
-	end
-	return true
+ local sprite = 1
+ local x = cross.x
+ local y = cross.y
+ while (sprite < 10) do
+  if (frame%3 == 1) sprite += 1 
+  spr(sprite, x, y)
+  yield()
+ end
+ add(marks, {x = x, y = y})
+ return true
 
 end
 
+function runCoroutines()
+    for v in all(coroutines) do
+        if (v != nil and costatus(v)) then
+            coresume(v)
+        elseif (v == nil) then
+            del(coroutines, v)
+        end
+    end
+    
+end
 
 function liftfloor()
-	foreach(marks, function(o) 
-				spr(32, o.x, o.y)
-		end)
+    for o in all(marks) do 
+        --cocreate(ember(o.x, o.y))
+        spr(32, o.x, o.y)
+    end
+end
+
+function ember()
+    local s = 32
+    local x = cross.x
+    local y = cross.y
+    while (true) do
+        if (frame%3 == 1) sprite += 1 
+        spr(s, x, y)
+        yield()
+    end
 end
 
 function _init()
-	cross = crosshair() 
+ cross = crosshair() 
 end
 
-
 function _update()
-	frame += 1
-	listen()
-	if (frame >= 30) frame = 0
+ frame += 1
+ listen()
+ if (frame >= 30) frame = 0
 end
 
 function _draw()
-	cls()
-	-- map(0,0, 31, 31)
-	spr(cross.spr, cross.x, cross.y)
-	if (cor and not coresume(cor)) then
-		cor = nil
-		liftfloor()
-	end
+ cls()
+ -- show croshairs
+ spr(cross.spr, cross.x, cross.y)
+ liftfloor()
+ runCoroutines()
 end
 __gfx__
 00000000000000000000000000aaaa000a00000000a2000002a02002029000000240000000000000000000000000000000000000000000000000000000000000
