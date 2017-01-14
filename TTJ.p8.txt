@@ -1,0 +1,94 @@
+on the limitations:
+The main limitation is of course the 10x11 screen resolution.
+But there is also the regular CPU limitation which already ~70-75% filled by the TV rendering. The remaining 25% will need to be enough for your games. Otherwise, consider reskinning your TV to something lighter (see "on the sprite-sheet" section).
+
+Those are the only limitations for the jam but of course, regular Pico-8 restrictions apply as well.
+
+The TV can be turned on and off with the player2's 'O' button ('tab' on a keyboard) or through the pause menu (hit 'enter').
+
+
+on the cart's code:
+at the beginning of the cart there are a few variables you can set only once and only there:
+
+- tv_transparency_col
+that's the transparency color on your voxel TV plans.
+It's only useful if you wish to reskin your TV.
+
+- tv_screen_height
+that's the height of the middle of the TV screen.
+Again, this is only useful if you wish to reskin your TV.
+
+- tv_player2btn_turnon
+when set to true, 'tab' on a keyboard will let you turn the tv on and off
+
+
+then, there are variables you can change whenever:
+- tv_angle
+rotation around the y axis (0-1, NOT 0-360 or 0-pi)
+
+- tv_anglespd
+this variable is added to tv_angle each frame
+
+- tv_xoffset
+- tv_yoffset
+x and y offset of the TV on the Pico-8 screen
+
+- tv_fakevangle
+because I'm not that good at maths, I couldn't figure out rotation around the x axis.
+instead you have this fake rotation which is very limited and can take values from -1 to 1.
+sorry about that
+
+- tv_debug
+when set to true, the memory and the cpu used by the cart will be displayed at the top-left corner of the screen
+
+These variables are also used by the base cart, which will automatically recenter the tv and direct it towards you. This can be ignored by setting these variables again each frame.
+
+
+
+next are the base functions of your game: _game_init(), _game_update(), _game_draw(). They behave exactly like the regular _init(), _update() and _draw() functions except _game_init() is called when the tv is turned on.
+
+_game_shutdown() is called when turning off the TV.
+_set_screen_text() lets you add static text around your tv. it uses the tv_add_text function:
+- tv_add_text(text,x,y,alignment[,color0,color1])
+sets static text to be displayed on the Pico-8 screen.
+alignment can be 0: aligned left
+1: aligned center
+2: aligned right
+
+Both _game_shutdown() and _set_screen_text() are optional and can be deleted if you don't wish to use them.
+
+
+Then there is space for your own functions but you can but you can put them before that if you like.
+
+
+And then there are the base carts internal functions which you should not change. Changing these functions is against the rules of the jam. Please don't do it.
+
+
+note: the tv can be turned on/off in the code by calling tv_turn_onoff()
+
+
+
+on sound:
+The base cart calls sfx(0) and sfx(1) upon turning on and off the tv. You can of course change these sfx to whatever you like.
+
+You are free to use as many sfx as you normally can in Pico-8 and same thing for the music!
+
+
+on the sprite-sheet and the map:
+The base cart uses the second half of the sprite-sheet (which is also the second half of the map) as voxel layers for the TV and also for the tile in the background.
+You are invited to modify these layers and reskin your tv this way.
+If you do so, don't forget to set the tv_transparency_col and tv_screen_height variables if needed.
+Note that if black cells are in the screen frame, they will get the screen color, whatever their depth.
+Also note that the rendering of the TV renders all non-transparent cells and that is heavy on CPU so try to do empty cases rather than filled ones (i.e. do like it is done on the base cart).
+
+You are also invited to change the background tile.
+
+You are free to use the free half of the sprite-sheet as well as the free half of the map, as you like!
+
+
+
+If anyone is encountering any problem with the cart, please report it here as soon as possible!
+
+
+This is all there is to know.
+Good luck and have fun every one!
