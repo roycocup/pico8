@@ -7,35 +7,35 @@ m = {}
 frame = 0
 
 function get_pixels()
-	for i=0, 64 do
-		for j=0, 64 do
-			add(m, {x=i,y=j,c=rnd(3)})
-		end
-	end
+ for i=0, 64 do
+  for j=0, 64 do
+   add(m, {x=i,y=j,c=rnd(3)})
+  end
+ end
 end
 
 
 -- http://webstaff.itn.liu.se/~stegu/circle/circlealgorithm.pdf
 function draw_ripple(x0,y0,radius)
-	local x = radius
-	local y = 0
+  local x = radius
+  local y = 0
   decisionover2 = 1 - x
 
   while( y <= x )do
     pset( x + x0,  y + y0,    pget( x + x0 + 1,  y + y0 +1))
-    --pset( y + x0,  x + y0)
+    pset( y + x0,  x + y0)
     pset(-x + x0,  y + y0,    pget( -x + x0 -1,  y + y0 +1))
-    --pset(-y + x0,  x + y0)
+    pset(-y + x0,  x + y0)
     pset(-x + x0, -y + y0,   pget(-x + x0 -1, -y + y0 -1))
-    --pset(-y + x0, -x + y0)
+    pset(-y + x0, -x + y0)
     pset( x + x0, -y + y0,   pget(x + x0 +1, -y + y0 -1))
-    --pset( y + x0, -x + y0)
+    pset( y + x0, -x + y0)
     y += 1
     if(decisionover2 <= 0)then
-    	decisionover2 += 1 * y + 1
+     decisionover2 += 1 * y + 1
     else
-    	x -= 1
-    	decisionover2 += 1 * (y - x) + 1
+     x -= 1
+     decisionover2 += 1 * (y - x) + 1
     end
   end 
 end
@@ -43,42 +43,40 @@ end
 
 function ripple()
  local r = 1
-	while r < 20 do
-		if (frame%3==0) then  
-			r += 1
-			draw_ripple(24,24, r)
-		end
-		yield()
-	end
-	
-	return true
+ while r < 20 do
+  if (frame%3==0) then  
+   r += 1
+   draw_ripple(24,24, r)
+  end
+  yield()
+ end
+ return true
 end
 
 
 function _init()
-	get_pixels()
-	r1 = cocreate(ripple)
+ get_pixels()
+ r1 = cocreate(ripple)
 end
 
 function _update()
-	frame += 1
-	if (frame == 30) frame = 0
+ frame += 1
+ if (frame == 30) frame = 0
 end
 
 function run_coroutines()
-	if (r1) then	
-		coresume(r1) 
-	end
+ if (r1) then	
+  coresume(r1) 
+ end
 end
 
 function _draw()
-	cls()
+ cls()
 		
-	for v in all(m) do
-	   pset(v.x, v.y, v.c)
-	end
-
-	run_coroutines()
+ for v in all(m) do
+  pset(v.x, v.y, v.c)
+ end
+ run_coroutines()
 end
 
 __gfx__
