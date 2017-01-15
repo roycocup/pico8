@@ -1,38 +1,19 @@
 pico-8 cartridge // http://www.pico-8.com
 version 8
 __lua__
+
+
 m = {}
 frame = 0
 
-function _update()
-	frame += 1
-	if (frame == 30) frame = 0
-end
-
-
-function _draw()
-	cls()
-	
-	for v in all(m) do
-			pset(v.x, v.y, v.c)
-	end
-
-	ripple()
-	
-end
-
-function ripple()
-	if (not radius) then
-		local radius = 1
-	end
-	if (frame%3 == 0) then
-		if radius < 20 then  
-			radius += 1
+function get_pixels()
+	for i=0, 64 do
+		for j=0, 64 do
+			add(m, {x=i,y=j,c=rnd(3)})
 		end
-	end 
-	draw_ripple(24,24, radius)
-	-- yield()
+	end
 end
+
 
 -- http://webstaff.itn.liu.se/~stegu/circle/circlealgorithm.pdf
 function draw_ripple(x0,y0,radius)
@@ -60,18 +41,46 @@ function draw_ripple(x0,y0,radius)
 end
 
 
-function _init()
-	get_pixels()
-	r = cocreate(ripple)
+function ripple()
+ local r = 1
+	while r < 20 do
+		if (frame%3==0) then  
+			r += 1
+			draw_ripple(24,24, r)
+		end
+		yield()
+	end
+	
+	return true
 end
 
-function get_pixels()
-	for i=0, 64 do
-		for j=0, 64 do
-			add(m, {x=i,y=j,c=rnd(15)})
-		end
+
+function _init()
+	get_pixels()
+	r1 = cocreate(ripple)
+end
+
+function _update()
+	frame += 1
+	if (frame == 30) frame = 0
+end
+
+function run_coroutines()
+	if (r1) then	
+		coresume(r1) 
 	end
 end
+
+function _draw()
+	cls()
+		
+	for v in all(m) do
+	   pset(v.x, v.y, v.c)
+	end
+
+	run_coroutines()
+end
+
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
