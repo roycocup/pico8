@@ -7,7 +7,7 @@ __lua__
 
 ---values to set only here:
 tv_transparency_col  =4
-tv_screen_height     =7
+tv_screen_height     =12
 tv_player2btn_turnon =true
 
 ---values to change at runtime:
