@@ -20,13 +20,6 @@ tv_debug      =false
 own_debug     =true
 
 
-screen = {x=0,y=0,x2=10,y2=11}
-frames = 0
-cross = {x=0, y=0} -- crosshairs
-
---[[
-helpers
-]]--
 -- http://webstaff.itn.liu.se/~stegu/circle/circlealgorithm.pdf
 -- writen by cauli for "windy 0.0.4"
 function draw_ripple(x0,y0,radius)
@@ -52,9 +45,8 @@ function draw_ripple(x0,y0,radius)
   end 
 end
 
---[[ 
-logic
-]]--
+screen = {x=0,y=0,x2=10,y2=11}
+cross = {x=0, y=0}
 function update_cross()
   local interval = 1
 	local size = 4
@@ -75,14 +67,35 @@ function update_cross()
   
 end
 
+frame = 0
 function frame_cnt()
-  frames +=1
-  if (frames >= 30 ) frames = 0
+  frame +=1
+  if (frame >= 30 ) frame = 0
+end
+
+solution = {}
+colors = {}
+function setup_board()
+  colors = {
+    {color ="red", index = 8}, 
+    {color ="yellow", index = 10}, 
+    {color="blue", index = 12}, 
+    {color="green", index = 11}, 
+    {color="purple", index = 15}, 
+    {color="white", index = 7},
+  }
+  local pieces = 4
+  
+  for i=0, pieces do
+    add(solution, rnd(count(colors)-1) + 1)
+  end
 end
 
 ---this is called on tv turn-on
 ---initialize your game here
 function _game_init()
+  setup_board()
+
 end
 
 
@@ -100,8 +113,11 @@ function _game_draw()
  cls()
  spr(1,cross.x,cross.y,4,4)
  -- circ(cross.x,cross.y,2,5)
- pset(1,1,8)
- pset(9,9,8)
+ i = 0
+ for v in all(solution) do
+  pset(i,0,colors[v].index)
+  i += 1
+ end
 end
 
 --called on tv turn-off (optional)
