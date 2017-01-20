@@ -69,9 +69,24 @@ function embers()
     end
 end
 
+function actor(spr_num, x, y)
+    local a = {}
+    a.spr = spr_num
+    a.x = x
+    a.y = y
+    function a:update()
+    end
+    function a:draw()
+    end
+    return a
+end
+
 function fade_in_character(n,x,y)
     if n == 1 then 
-        spr(17,x,y)
+        -- create the actor and include it in table of things to be updated and rendered
+        a = actor(17, o.x, o.y)
+        -- add to big actors table
+        -- 
     elseif n == 2 then
     elseif n == 3 then
     end
@@ -138,8 +153,9 @@ function _draw()
  showcursor() 
  applymarks()
  runcoroutines()
- 
 end
+
+
 __gfx__
 00000000000000000000000000aaaa000a00000000a2000002a02002029000000240000000000000000000000000000000000000000000000000000000000000
 0000000000222200007777000a7777a00aa00aa0029920002a990020299000002400000000000000000000000000000000000000000000000000000000000000
