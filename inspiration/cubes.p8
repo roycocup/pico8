@@ -2,14 +2,17 @@ pico-8 cartridge // http://www.pico-8.com
 version 8
 __lua__
 cls()
-z=0
+z=128 
 ::q:: 
-z+=.924 
-s=sin(z) 
-c=2*cos(z*2) 
-x=s*64+64 
-y=(c*64+z)%127 
-pset(x,y, c%2*2+pget(x-s*64,y)/2-8 ) 
+t=flr(time()) 
+l=2.3 
+for i=0,z*z,l do 
+  x=i/z 
+  x-=x%4 
+  y=i%z 
+  rect(x,y,x-2,y+1, ((pget(x,y)+t)%2+5)*3) 
+end 
+flip()
 goto q
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

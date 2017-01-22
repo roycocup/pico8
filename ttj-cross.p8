@@ -82,8 +82,6 @@ function end_game()
 end
 
 
-function listen()
-end
 
 
 function check_game_over()
@@ -104,6 +102,11 @@ function play_coroutines()
             coresume(v.routine)
         end
     end
+end
+
+
+function make_objects()
+	objects = {}
 end
 
 
