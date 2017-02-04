@@ -3,14 +3,48 @@ version 8
 __lua__
 
 scenes = {'mmenu', 'main', 'gover'}
-gameobjects = {}
-game_time = 0
 delta_time = 0
 game = {}
+
+
+function breathing_system()
+  bs = {}
+  bs.times = {}
+  bs.times.exhale = 4
+  bs.times.inhale = 6
+  bs.times.counter = 0
+  bs.movement = 0 -- 0 inhale, 1 exhale
+
+  
+  -- called 30 times per second
+  function bs.update()
+    if (game.frame == 15) then
+      bs.times.counter += 1 
+      
+      if (bs.movement == 0 and bs.times.counter >= bs.times.inhale) then 
+        bs.times.counter = 0
+        bs.movement = 1
+      elseif (bs.movement == 1 and bs.times.counter >= bs.times.exhale) then
+        bs.times.counter = 0
+        bs.movement = 0
+      end
+
+    end
+  end
+
+  function bs.draw()
+    print(bs.movement, 10, 10)
+    print(bs.times.counter, 10, 20)
+  end
+
+end
 
 function get_game()
   game.frame = 0
   game.breathing_tube = {}
+  game.time = time
+  game.delta_time = 0
+  game.objects = {}
 
   function game.count_frame()
     game.frame += 1
@@ -27,23 +61,28 @@ function get_game()
     print(game.frame, 64, 64)
   end
 
+  function register_object(obj)
+    add(game.objects, obj)
+  end
+
 end
 
-function register_object(obj)
-  add(gameobjects, obj)
-end
+
 
 function _init()
   get_game()
+  breathing_system()
 end
 
 function _update()
   game.update()
+  bs.update()
 end
 
 function _draw()
   cls()
   game.draw()
+  bs.draw()
 end
 
 __gfx__
