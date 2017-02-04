@@ -10,22 +10,22 @@ game = {}
 function breathing_system()
   bs = {}
   bs.times = {}
-  bs.times.exhale = 4
   bs.times.inhale = 6
-  bs.times.counter = 0
+  bs.times.exhale = 4
+  bs.times.counter = bs.times.inhale
   bs.movement = 0 -- 0 inhale, 1 exhale
 
   
   -- called 30 times per second
   function bs.update()
     if (game.frame == 15) then
-      bs.times.counter += 1 
+      bs.times.counter -= 1 
       
-      if (bs.movement == 0 and bs.times.counter >= bs.times.inhale) then 
-        bs.times.counter = 0
+      if (bs.movement == 0 and bs.times.counter <= 0) then 
+        bs.times.counter = bs.times.exhale
         bs.movement = 1
-      elseif (bs.movement == 1 and bs.times.counter >= bs.times.exhale) then
-        bs.times.counter = 0
+      elseif (bs.movement == 1 and bs.times.counter <= 0) then
+        bs.times.counter = bs.times.inhale
         bs.movement = 0
       end
 
